@@ -67,6 +67,18 @@ Repository organization:
 - development takes place on the `main` branch
 - stable versions are available in the `Releases` section
 
+## FORK DIFFERENCES
+
+This repository is a fork of [NVIDIA-RTX/NRI](https://github.com/NVIDIA-RTX/NRI), maintained in the [`zig`](https://github.com/LamHo220/NRI.zig/tree/zig) branch. The public NRI API and the CMake build are unchanged; the fork adds:
+
+- *Zig package support* - `build.zig`, `build.zig.zon` and `Scripts/agility_sdk.zig` build NRI as a standard Zig package, install the public headers, and expose the options documented in [ZIG PACKAGE](#zig-package)
+- *Windows non-MSVC toolchains* - the default Zig target (`x86_64-windows-gnu`, using Zig's bundled mingw-w64 headers) is supported alongside MSVC. This only affects header/code compatibility, not runtime behavior:
+    - `Source/Shared/D3D12Compat.h` normalizes the WIDL value-returning vs out-parameter COM signatures exposed by different `d3d12.h` variants
+    - `Scripts/d3d12_guids.h` provides the D3D12 GUID definitions on non-MSVC builds
+    - `Source/Shared/D3D11Compat.h` fills in D3D11 limit macros missing from mingw-w64 headers
+    - D3D12 call sites that relied on value-returning COM methods use the helpers from `D3D12Compat.h` instead
+- *Zig build artifacts ignored by Git* - `.zig-cache/`, `zig-out/`, `zig-pkg/`
+
 ## BUILD INSTRUCTIONS
 
 - Install [*CMake*](https://cmake.org/download/) 3.30+
@@ -102,6 +114,55 @@ Notes:
     add_custom_command(TARGET App POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${NRI_METAL_SHADER_CONVERTER_LIBRARY}" "$<TARGET_FILE_DIR:App>")
     ```
     - iOS: embed `libmetalirconverter.dylib` into the app `Frameworks` folder (`@executable_path/Frameworks`) and sign it, the *App Store* may require wrapping it into a `.framework`
+
+## ZIG PACKAGE
+
+*NRI* is a standard *Zig* package. Add it to `build.zig.zon`:
+
+```sh
+zig fetch --save git+https://github.com/LamHo220/NRI#zig
+```
+
+Use it from `build.zig`:
+
+```zig
+const nri = b.dependency("nri", .{
+    .target = target,
+    .optimize = optimize,
+    .backend = .d3d12,
+});
+
+mod.addIncludePath(nri.path("Include"));
+mod.linkLibrary(nri.artifact("nri"));
+```
+
+Options:
+- `backend` - `auto` (platform default), `none`, `d3d11`, `d3d12`, `vk`, `wgpu`, `metal` (different backends are not fully tested yet)
+- `shared` - build a shared library instead of a static one
+- `validation` - include the validation backend (default `true`)
+- `debug_names` - include debug names and annotations (default `true`)
+- `agility_sdk` - use the *Agility SDK* for *D3D12* (default `true` on Windows)
+- `metal_shader_converter` - convert *DXIL* to *Metal IR* (default `false`) (not tested yet)
+- `xlib`, `wayland` - enable *Vulkan* surfaces on Linux (`xlib` is on by default) (`xlib` is not tested yet)
+
+*Vulkan* on Windows needs `VULKAN_SDK` in environment variable. *Agility SDK* DLLs are exposed as `agility-sdk-bin` and installed to `bin/AgilitySDK` by the default install step. To bundle them in an application, install the named path:
+
+```zig
+const sdk = nri.namedLazyPath("agility-sdk-bin");
+b.installDirectory(.{
+    .source_dir = sdk,
+    .install_dir = .bin,
+    .install_subdir = "AgilitySDK",
+});
+```
+
+The matching `NRIAgilitySDK.h` is available as `nri.namedWriteFiles("agility-sdk-header").getDirectory()`.
+
+A static library cannot absorb the prebuilt *wgpu-native* archive. When using the `wgpu` backend, link it next to *NRI*:
+
+```zig
+mod.addObjectFile(nri.namedLazyPath("wgpu_native"));
+```
 
 ## CMAKE OPTIONS
 

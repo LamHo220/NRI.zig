@@ -1,0 +1,75 @@
+.{
+    .name = .nri,
+    .version = "192.0.0",
+    .fingerprint = 0x946ffdb029979042,
+    .minimum_zig_version = "0.17.1",
+    .dependencies = .{
+        .vulkan_headers = .{
+            .url = "git+https://github.com/KhronosGroup/Vulkan-Headers#v1.4.368",
+            .hash = "N-V-__8AAGrcigJk__pPsEdMgID-QhKWYAi-MHHn3sn5HOI6",
+            .lazy = true,
+        },
+        .vulkan_ma = .{
+            .url = "git+https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator#0f1a757da579831283413295cc7f3b47eb521c77",
+            .hash = "N-V-__8AAIwTQQCo2Vn2vnA6AyuuVuy1gDUXA4Hld0ROVTJe",
+            .lazy = true,
+        },
+        .directx_headers = .{
+            .url = "git+https://github.com/microsoft/DirectX-Headers#v1.620.1",
+            .hash = "N-V-__8AALhsSwC8OHdGdyqHrDMt2QgAMirzqJDXjimB-dSb",
+            .lazy = true,
+        },
+        .d3d12ma = .{
+            .url = "git+https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator#1d86c1130f61453634b1df85782e1fecfd59a525",
+            .hash = "N-V-__8AAFFdMABADClCZMTslMw0L6IpsRD6ZGjA5arlLQP4",
+            .lazy = true,
+        },
+        .pix = .{
+            .url = "git+https://github.com/microsoft/PixEvents#b0caa735f8510f4ff60c29ef1c88101620defc5e",
+            .hash = "N-V-__8AAEoqhgDxv2bCFvFtMzJ8x2C1Pc9XrufUuqtXf6HD",
+            .lazy = true,
+        },
+        .metal_cpp = .{
+            .url = "git+https://github.com/apple/metal-cpp#8cdde68ae36a636c84cbb48ebcbc8f3b60251ea0",
+            .hash = "N-V-__8AAO4CGgAVaPvL4_S4XFWGZpXTtE6MCBcED5tfOy7h",
+            .lazy = true,
+        },
+        .wgpu_windows_x86 = .{
+            .url = "https://github.com/gfx-rs/wgpu-native/releases/download/v29.0.1.1/wgpu-windows-x86_64-gnu-release.zip",
+            .hash = "N-V-__8AAIV6GgPzrhI9UgYVJuTvVgZIm4n3bPc6dMAOpPYl",
+            .lazy = true,
+        },
+        .wgpu_linux_x86 = .{
+            .url = "https://github.com/gfx-rs/wgpu-native/releases/download/v29.0.1.1/wgpu-linux-x86_64-release.zip",
+            .hash = "N-V-__8AAAVLrgM9jWFLs7n4rHyodpjIYxtBBE1No8nK0pRz",
+            .lazy = true,
+        },
+        .wgpu_linux_arm = .{
+            .url = "https://github.com/gfx-rs/wgpu-native/releases/download/v29.0.1.1/wgpu-linux-aarch64-release.zip",
+            .hash = "N-V-__8AACvXrAO11f5LA-Qfgm2C0XyWNhS_0N30HTL-Y5pQ",
+            .lazy = true,
+        },
+        .wgpu_macos_x86 = .{
+            .url = "https://github.com/gfx-rs/wgpu-native/releases/download/v29.0.1.1/wgpu-macos-x86_64-release.zip",
+            .hash = "N-V-__8AAFWheQIu8DV1xiTixrDsCJ0xr7-Ssy-XhEIkgx5u",
+            .lazy = true,
+        },
+        .wgpu_macos_arm = .{
+            .url = "https://github.com/gfx-rs/wgpu-native/releases/download/v29.0.1.1/wgpu-macos-aarch64-release.zip",
+            .hash = "N-V-__8AAAUNfQJBPHGd3KMhFvl4WLpzHDx9rFkwSf2rFVhr",
+            .lazy = true,
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "Include",
+        "Source",
+        "Shaders",
+        "Scripts/agility_sdk.zig",
+        "Scripts/d3d12_guids.h",
+        "Scripts/pix.h",
+        "LICENSE.txt",
+        "README.md",
+    },
+}

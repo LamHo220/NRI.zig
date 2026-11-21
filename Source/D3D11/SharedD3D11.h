@@ -5,6 +5,7 @@
 #include <d3d11_4.h>
 #include <pix.h>
 
+#include "D3D11Compat.h"
 #include "SharedExternal.h"
 
 #define USE_ANNOTATION_INT 0 // unfortunately, just a few tools support "BeginEventInt" and "SetMarkerInt"

@@ -12,6 +12,11 @@ compile_commands.json
 *.log
 *.ninja
 
+# zig
+.zig-cache/
+zig-out/
+zig-pkg/
+
 # generated
 _Bin/
 _Build/
