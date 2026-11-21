@@ -110,6 +110,7 @@ NriBits(GraphicsAPI, uint8_t,
 
 NriEnum(Result, int8_t,
     // All bad, but optionally require an action ("callbackInterface.AbortExecution" is not triggered)
+    EXT_ERROR               = -5,   // a potentially recoverable 3rd party SDK failure; details are reported
     NOT_READY               = -4,   // VK: zero surface extent during swap chain creation; WGPU: no swap chain texture available yet. Process window events and retry
     DEVICE_LOST             = -3,   // may be returned by "QueueSubmit*", "*WaitIdle", "AcquireNextTexture", "QueuePresent", "WaitForPresent"
     OUT_OF_DATE             = -2,   // VK/WGPU: swap chain is out of date, can be triggered if "features.resizableSwapChain" is not supported; D3D12: shader cache is stale
@@ -1670,6 +1671,7 @@ NriStruct(ComputePipelineDesc) {
     Nri(ComputePipelineBits) flags;
     Nri(Robustness) robustness;
     NriOptional const NriPtr(PipelineCache) cache; // uses a cached blob on a hit and stores the result on a miss
+    NriOptional uint32_t waveLaneNum;              // VK: requested wave size; 0 = driver choice, ignored if unsupported (D3D12: use "[WaveSize]" in the shader)
 };
 
 #pragma endregion
@@ -2359,6 +2361,7 @@ NriStruct(DeviceDesc) {
         bool extendedDynamicState;                                // VK: allows to use "VertexBufferDesc::stride" (dynamic) instead of "VertexStreamDesc::stride" (static). Widely supported
         bool unifiedTextureLayouts;                               // VK: allows to use "GENERAL" everywhere: https://docs.vulkan.org/refpages/latest/refpages/source/VK_KHR_unified_image_layouts.html
         bool resourceAliasing;                                    // binding multiple distinct texture or buffer objects to overlap the same underlying memory allocation (unsupported only in D3D11)
+        bool waveLaneNumControl;                                  // see "ComputePipelineDesc::waveLaneNum"
     } features;
 
     // Shader features
